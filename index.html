@@ -82,11 +82,11 @@
   <td><strong><span id="internetDisplay">6</span> บาท</strong></td>
 </tr>
 <tr class="expense-row">
-  <td>ค่าเช่าล็อก</td>
+  <td>ค่าเช่าล็อก(ต่อวัน)</td>
   <td><input id="rent" type="number" min="0" value="0" onchange="calculate()"> บาท</td>
 </tr>
 <tr class="expense-row">
-  <td>ค่าไฟ</td>
+  <td>ค่าไฟ(ต่อวัน)</td>
   <td><input id="electric" type="number" min="0" value="0" onchange="calculate()"> บาท</td>
 </tr>
 <tr class="expense-row">
@@ -127,7 +127,7 @@
     <tr>
       <td colspan="5">
         <div class="sales-total">
-          <div style="font-weight:600;">ยอดขายรวมทั้งหมด (กรอกยอดขายรวมทุกรายการ):</div>
+          <div style="font-weight:600;">ยอดขายรวมทั้งหมด:</div>
           <div><input id="totalSalesInput" type="number" min="0" value="0" onchange="calculate()"></div>
           <div>บาท</div>
         </div>
@@ -149,7 +149,7 @@
 
 <script>
 // ราคาต้นทุนต่อชิ้น (ล็อกไว้)
-const costList = { "ชีสเค้ก":25, "ไก่หยอง":20, "หน้านิ่ม":10, "เปี๊ยะ":25, "บราวนี่":15, "ขนมปังเจ":20 };
+const costList = { "ชีสเค้ก(25)":25, "ไก่หยอง(20)":20, "หน้านิ่ม(10)":10, "เปี๊ยะ(25)":25, "บราวนี่(15)":15, "ขนมปังเจ(20)":20 };
 
 // ค่ารายจ่ายล็อกตามที่ร้องขอ
 const SHIPPING = 250;
