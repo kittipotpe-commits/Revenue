@@ -20,19 +20,19 @@
 
 <h1>🧮 คำนวณกำไร 80:20 (พร้อมค่าใช้จ่าย)</h1>
 
-<h2>ค่าใช้จ่ายต่อวัน</h2>
+<h2>ค่าใช้จ่ายต่อวัน (ล็อกค่า)</h2>
 <table>
 <tr>
   <td>ค่าขนส่ง</td>
-  <td><input type="number" min="0" value="250" id="shipping" onchange="calculate()"></td>
+  <td><span id="shippingDisplay">250</span> บาท</td>
 </tr>
 <tr>
   <td>ค่าน้ำแข็งแห้ง</td>
-  <td><input type="number" min="0" value="30" id="ice" onchange="calculate()"></td>
+  <td><span id="iceDisplay">30</span> บาท</td>
 </tr>
 <tr>
   <td>ค่าอินเตอร์เน็ต</td>
-  <td><input type="number" min="0" value="6" id="internet" onchange="calculate()"></td>
+  <td><span id="internetDisplay">6</span> บาท</td>
 </tr>
 </table>
 
@@ -68,46 +68,72 @@
   </tfoot>
 </table>
 
-<button onclick="clearAll()">ล้างค่าทั้งหมด</button>
+<button onclick="clearAll()">ล้างรายการสินค้า</button>
 
 <script>
 // ราคาต้นทุนต่อชิ้น (ล็อกไว้)
 const costList = { "ชีสเค้ก":25, "ไก่หยอง":20, "หน้านิ่ม":10, "เปี๊ยะ":25, "บราวนี่":15, "ขนมปังเจ":20 };
 
+// ค่ารายจ่ายล็อกตามที่ร้องขอ
+const SHIPPING = 250;
+const ICE = 30;
+const INTERNET = 6;
+
+document.getElementById('shippingDisplay').textContent = SHIPPING;
+document.getElementById('iceDisplay').textContent = ICE;
+document.getElementById('internetDisplay').textContent = INTERNET;
+
 function calculate() {
-  let totalProfit=0, totalStaff=0, totalOwner=0, totalSale=0;
+  let totalProfit = 0, totalStaff = 0, totalOwner = 0, totalSale = 0;
+  const totalExpense = SHIPPING + ICE + INTERNET;
 
-  // ดึงค่าใช้จ่ายต่อวัน
-  const shipping = parseFloat(document.getElementById("shipping").value) || 0;
-  const ice = parseFloat(document.getElementById("ice").value) || 0;
-  const internet = parseFloat(document.getElementById("internet").value) || 0;
-  const totalExpense = shipping + ice + internet;
+  const rows = Array.from(document.querySelectorAll("#productTable tr"));
 
-  const rows = document.querySelectorAll("#productTable tr");
-
-  rows.forEach(row=>{
+  // เก็บ gross profit ของแต่ละแถวไว้ก่อน
+  const rowData = rows.map(row=>{
     const product = row.cells[0].innerText;
     const qty = parseFloat(row.querySelectorAll("input")[0].value) || 0;
     const sale = parseFloat(row.querySelectorAll("input")[1].value) || 0;
-    const cost = qty * costList[product];
-    const profit = Math.max(sale - cost,0);
-    const staff = profit * 0.8;
-    const owner = profit * 0.2;
-
-    row.querySelector(".profit").textContent = profit.toFixed(2);
-    row.querySelector(".staff").textContent = staff.toFixed(2);
-    row.querySelector(".owner").textContent = owner.toFixed(2);
-
-    totalProfit += profit;
-    totalStaff += staff;
-    totalOwner += owner;
-    totalSale += sale;
+    const cost = qty * (costList[product] || 0);
+    const grossProfit = sale - cost; // อาจเป็นลบได้ ช่วงนี้เก็บไว้ก่อน
+    return { row, product, qty, sale, cost, grossProfit };
   });
 
-  // หักค่าใช้จ่ายต่อวันจากกำไรรวม
-  totalProfit -= totalExpense;
-  totalStaff = totalProfit * 0.8;
-  totalOwner = totalProfit * 0.2;
+  // คำนวณยอดขายรวม และผลรวม gross profit (เฉพาะค่าบวกและลบรวมกันตามจริง)
+  totalSale = rowData.reduce((s, r) => s + r.sale, 0);
+  const sumGrossProfit = rowData.reduce((s, r) => s + r.grossProfit, 0);
+
+  if (sumGrossProfit !== 0) {
+    // กระจายค่าใช้จ่ายตามสัดส่วน grossProfit ของแต่ละสินค้า
+    rowData.forEach(r=>{
+      // สัดส่วนจาก grossProfit — ถ้า grossProfit เป็นลบ ก็ยังกระจายตามสัมพัทธ์ (อนุญาตให้เป็นลบ)
+      const allocatedExpense = (r.grossProfit / sumGrossProfit) * totalExpense;
+      const netProfit = r.grossProfit - allocatedExpense;
+
+      const staff = netProfit * 0.8;
+      const owner = netProfit * 0.2;
+
+      // แสดงแถว (ปัดทศนิยม 2 ตำแหน่ง)
+      r.row.querySelector(".profit").textContent = netProfit.toFixed(2);
+      r.row.querySelector(".staff").textContent = staff.toFixed(2);
+      r.row.querySelector(".owner").textContent = owner.toFixed(2);
+
+      totalProfit += netProfit;
+      totalStaff += staff;
+      totalOwner += owner;
+    });
+  } else {
+    // ไม่มี gross profit เลย: ตั้งกำไรแถวเป็น 0 และแสดงผลรวมเป็นผลรวมหลังหักค่าใช้จ่าย (มักจะเป็นลบ)
+    rowData.forEach(r=>{
+      r.row.querySelector(".profit").textContent = (0).toFixed(2);
+      r.row.querySelector(".staff").textContent = (0).toFixed(2);
+      r.row.querySelector(".owner").textContent = (0).toFixed(2);
+    });
+
+    totalProfit = -totalExpense;
+    totalStaff = totalProfit * 0.8;
+    totalOwner = totalProfit * 0.2;
+  }
 
   document.getElementById("totalSale").textContent = totalSale.toFixed(2);
   document.getElementById("totalProfit").textContent = totalProfit.toFixed(2);
@@ -116,9 +142,13 @@ function calculate() {
 }
 
 function clearAll(){
-  document.querySelectorAll("input").forEach(i=>i.value=0);
+  // ล้างเฉพาะรายการสินค้า (จำนวนและยอดขาย) แต่คงค่าใช้จ่ายรายวันไว้ (ล็อก)
+  document.querySelectorAll("#productTable input").forEach(i=>i.value=0);
   calculate();
 }
+
+// คำนวณเมื่อหน้าโหลดครั้งแรก
+window.addEventListener('DOMContentLoaded', calculate);
 </script>
 
 </body>
