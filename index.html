@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>คำนวณแบ่งกำไร 80:20</title>
+<style>
+  body {
+    font-family: "Prompt", sans-serif;
+    background: #f6f8fa;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+  }
+  h1 {
+    text-align: center;
+    color: #2c3e50;
+    font-size: 1.4em;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  th, td {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+    font-size: 0.9em;
+  }
+  th {
+    background-color: #2c3e50;
+    color: white;
+  }
+  input {
+    width: 80px;
+    padding: 5px;
+    text-align: right;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  tfoot td {
+    font-weight: bold;
+    background: #ecf0f1;
+  }
+  button {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+  }
+  @media (max-width: 600px) {
+    th, td {
+      font-size: 0.85em;
+      padding: 8px;
+    }
+    input {
+      width: 70px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<h1>🧮 ระบบคำนวณแบ่งกำไร 80:20 (หักต้นทุน)</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>สินค้า</th>
+      <th>ยอดขาย (บาท)</th>
+      <th>ต้นทุน (บาท)</th>
+      <th>กำไรสุทธิ</th>
+      <th>พนักงาน 80%</th>
+      <th>เจ้าของร้าน 20%</th>
+    </tr>
+  </thead>
+  <tbody id="productTable">
+    <tr>
+      <td>ชีสเค้ก</td>
+      <td><input type="number" min="0" value="0" onchange="calculate()"></td>
+      <td><input type="number" min="0" value="0" onchange="calculate()"></td>
+      <td class="profit">0</td>
+      <td class="staff">0</td>
+      <td class="owner">0</td>
+    </tr>
+    <tr>
+      <td>ไก่หยอง</td>
+      <td><input type="number" min="0" value="0" onchange="calculate()"></td>
+      <td><input type="number" min="0" value="0" onchange="calculate()"></td>
+      <td class="profit">0</td>
+      <td class="staff">0</td>
+      <td class="owner">0</td>
+    </tr>
+    <tr>
+      <td>หน้านิ่ม</td>
+      <td><input type="number" min="0" value="0" onchange="calculate()"></td>
+      <td><input type="number" min="0" value="0" onchange="calculate()"></td>
+      <td class="profit">0</td>
+      <td class="staff">0</td>
+      <td class="owner">0</td>
+    </tr>
+    <tr>
+      <td>เปี๊ยะ</td>
+      <td><input type="number" min="0" value="0" onchange="calculate()"></td>
+      <td><input type="number" min="0" value="0" onchange="calculate()"></td>
+      <td class="profit">0</td>
+      <td class="staff">0</td>
+      <td class="owner">0</td>
+    </tr>
+    <tr>
+      <td>บราวนี่</td>
+      <td><input type="number" min="0" value="0" onchange="calculate()"></td>
+      <td><input type="number" min="0" value="0" onchange="calculate()"></td>
+      <td class="profit">0</td>
+      <td class="staff">0</td>
+      <td class="owner">0</td>
+    </tr>
+    <tr>
+      <td>ปังเจ</td>
+      <td><input type="number" min="0" value="0" onchange="calculate()"></td>
+      <td><input type="number" min="0" value="0" onchange="calculate()"></td>
+      <td class="profit">0</td>
+      <td class="staff">0</td>
+      <td class="owner">0</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>รวมทั้งหมด</td>
+      <td id="totalSale">0</td>
+      <td id="totalCost">0</td>
+      <td id="totalProfit">0</td>
+      <td id="totalStaff">0</td>
+      <td id="totalOwner">0</td>
+    </tr>
+  </tfoot>
+</table>
+
+<button onclick="clearAll()">ล้างค่าทั้งหมด</button>
+
+<script>
+function calculate() {
+  let totalSale = 0, totalCost = 0, totalProfit = 0, totalStaff = 0, totalOwner = 0;
+  const rows = document.querySelectorAll("#productTable tr");
+
+  rows.forEach(row => {
+    const sale = parseFloat(row.querySelectorAll("input")[0].value) || 0;
+    const cost = parseFloat(row.querySelectorAll("input")[1].value) || 0;
+    const profit = Math.max(sale - cost, 0);
+    const staff = profit * 0.8;
+    const owner = profit * 0.2;
+
+    row.querySelector(".profit").textContent = profit.toFixed(2);
+    row.querySelector(".staff").textContent = staff.toFixed(2);
+    row.querySelector(".owner").textContent = owner.toFixed(2);
+
+    totalSale += sale;
+    totalCost += cost;
+    totalProfit += profit;
+    totalStaff += staff;
+    totalOwner += owner;
+  });
+
+  document.getElementById("totalSale").textContent = totalSale.toFixed(2);
+  document.getElementById("totalCost").textContent = totalCost.toFixed(2);
+  document.getElementById("totalProfit").textContent = totalProfit.toFixed(2);
+  document.getElementById("totalStaff").textContent = totalStaff.toFixed(2);
+  document.getElementById("totalOwner").textContent = totalOwner.toFixed(2);
+}
+
+function clearAll() {
+  document.querySelectorAll("input").forEach(i => i.value = 0);
+  calculate();
+}
+</script>
+
+</body>
+</html>
