@@ -28,20 +28,15 @@
     color:white;
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     margin-bottom:14px;
-  }
-  #logo {
-    width:64px;
-    height:64px;
-    object-fit:cover;
-    border-radius:10px;
-    background:white;
-    padding:6px;
+    justify-content:center;
+    text-align:center;
   }
   h1 {
     margin:0;
     font-size:1.3rem;
     font-weight:600;
   }
+  .subhead { font-size:0.9rem; opacity:0.9; margin-top:4px; }
 
   table { width:100%; border-collapse:collapse; margin-top:6px; background:white; border-radius:10px; overflow:hidden; box-shadow:0 2px 5px rgba(0,0,0,0.06); }
   th, td { border-bottom:1px solid #eee; padding:10px; text-align:center; font-size:0.95em; }
@@ -64,12 +59,11 @@
 </head>
 <body>
 
-<!-- Header with logo + title -->
+<!-- Header (no image) -->
 <div class="header">
-  <!-- 💰💰💰💰 -->
   <div>
     <h1>รายรับของพนักงาน</h1>
-    <div style="font-size:0.9rem; opacity:0.9;">สรุปยอดและหักค่าใช้จ่าย </div>
+    <div class="subhead">สรุปยอดและหักค่าใช้จ่าย </div>
   </div>
 </div>
 
@@ -106,19 +100,19 @@
   <thead>
     <tr>
       <th>สินค้า</th>
-      <th>จำนวนชิ้น</th>
+      <th>จำนวนสินค้าที่ขายได้</th>
       <th>กำไรสุทธิ</th>
       <th>พนักงาน 80%</th>
       <th>เจ้าของร้าน 20%</th>
     </tr>
   </thead>
   <tbody id="productTable">
-    <tr><td>ชีสเค้ก</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>ไก่หยอง</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>หน้านิ่ม</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>เปี๊ยะ</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>บราวนี่</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>ขนมปังเจ</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>ชีสเค้ก(25)</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>ไก่หยอง(20)</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>หน้านิ่ม(10)</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>เปี๊ยะ(25)</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>บราวนี่(15)</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>ขนมปังเจ(20)</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
   </tbody>
   <tfoot>
     <!-- ย้ายแถว 'รวมทั้งหมด' ให้อยู่ก่อนยอดขายรวม -->
