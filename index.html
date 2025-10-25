@@ -15,7 +15,9 @@
   tfoot td { font-weight:bold; background:#ecf0f1; }
   button { margin-top:15px; width:100%; padding:10px; background:#3498db; color:white; border:none; border-radius:8px; font-size:1em; cursor:pointer; }
   .sales-total { margin-top:12px; display:flex; gap:8px; align-items:center; justify-content:flex-end; }
-  @media(max-width:600px){ th,td{font-size:0.85em;padding:8px;} input[type="number"]{width:80px;} .sales-total{flex-direction:column;align-items:stretch;} }
+  .below-sales { margin-top:8px; display:flex; gap:12px; justify-content:flex-end; align-items:center; font-size:0.95em; color:#333; }
+  .below-sales div { background:#f0f3f5; padding:6px 10px; border-radius:6px; }
+  @media(max-width:600px){ th,td{font-size:0.85em;padding:8px;} input[type="number"]{width:80px;} .sales-total{flex-direction:column;align-items:stretch;} .below-sales{flex-direction:column;align-items:flex-end;} }
 </style>
 </head>
 <body>
@@ -25,15 +27,15 @@
 <h2>ค่าใช้จ่ายต่อวัน</h2>
 <table>
 <tr class="expense-row">
-  <td>ค่าขนส่ง </td>
+  <td>ค่าขนส่ง (ล็อก)</td>
   <td><strong><span id="shippingDisplay">250</span> บาท</strong></td>
 </tr>
 <tr class="expense-row">
-  <td>ค่าน้ำแข็งแห้ง </td>
+  <td>ค่าน้ำแข็งแห้ง (ล็อก)</td>
   <td><strong><span id="iceDisplay">30</span> บาท</strong></td>
 </tr>
 <tr class="expense-row">
-  <td>ค่าอินเตอร์เน็ต </td>
+  <td>ค่าอินเตอร์เน็ต (ล็อก)</td>
   <td><strong><span id="internetDisplay">6</span> บาท</strong></td>
 </tr>
 <tr class="expense-row">
@@ -77,6 +79,13 @@
           <div><input id="totalSalesInput" type="number" min="0" value="0" onchange="calculate()"></div>
           <div>บาท</div>
         </div>
+
+        <!-- ช่องแสดงผลรวมต้นทุน และรวมรายจ่าย ตามที่ขอ -->
+        <div class="below-sales" style="margin-top:10px;">
+          <div>รวมต้นทุนทั้งหมด: <strong><span id="totalCostDisplay">0.00</span> บาท</strong></div>
+          <div>รวมรายจ่ายทั้งหมด: <strong><span id="totalExpenseDisplay">0.00</span> บาท</strong></div>
+        </div>
+
       </td>
     </tr>
     <tr>
@@ -127,6 +136,10 @@ function calculate() {
   });
 
   const sumCost = rowData.reduce((s,r)=>s + r.cost, 0);
+
+  // แสดงผลรวมต้นทุน และรวมรายจ่าย (ตรงช่องที่เพิ่ม)
+  document.getElementById('totalCostDisplay').textContent = sumCost.toFixed(2);
+  document.getElementById('totalExpenseDisplay').textContent = totalExpense.toFixed(2);
 
   // กระจายยอดขายรวมไปยังแต่ละสินค้า ตามสัดส่วนต้นทุน (cost)
   if (sumCost > 0 && totalSaleInput > 0) {
