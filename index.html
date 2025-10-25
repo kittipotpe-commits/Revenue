@@ -72,6 +72,15 @@
     <tr><td>ขนมปังเจ</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit">0</td><td class="staff">0</td><td class="owner">0</td></tr>
   </tbody>
   <tfoot>
+    <!-- ย้ายแถว 'รวมทั้งหมด' ให้อยู่ก่อนยอดขายรวม -->
+    <tr>
+      <td>รวมทั้งหมด</td>
+      <td>-</td>
+      <td id="totalProfit">0</td>
+      <td id="totalStaff">0</td>
+      <td id="totalOwner">0</td>
+    </tr>
+
     <tr>
       <td colspan="5">
         <div class="sales-total">
@@ -80,21 +89,16 @@
           <div>บาท</div>
         </div>
 
-        <!-- ช่องแสดงผลรวมต้นทุน และรวมรายจ่าย ตามที่ขอ -->
+        <!-- แสดงรวมต้นทุน / รวมรายจ่าย และช่องรวมรายจ่ายทั้งหมด (ผลรวมของ 2 ช่อง) -->
         <div class="below-sales" style="margin-top:10px;">
           <div>รวมต้นทุนทั้งหมด: <strong><span id="totalCostDisplay">0.00</span> บาท</strong></div>
-          <div>รวมรายจ่ายทั้งหมด: <strong><span id="totalExpenseDisplay">0.00</span> บาท</strong></div>
+          <div>รวมค่าใช้จ่ายทั้งหมด: <strong><span id="totalExpenseDisplay">0.00</span> บาท</strong></div>
+          <div>รวมรายจ่ายทั้งหมด: <strong><span id="totalCombinedDisplay">0.00</span> บาท</strong></div>
         </div>
 
       </td>
     </tr>
-    <tr>
-      <td>รวมทั้งหมด</td>
-      <td>-</td>
-      <td id="totalProfit">0</td>
-      <td id="totalStaff">0</td>
-      <td id="totalOwner">0</td>
-    </tr>
+
   </tfoot>
 </table>
 
@@ -137,9 +141,13 @@ function calculate() {
 
   const sumCost = rowData.reduce((s,r)=>s + r.cost, 0);
 
-  // แสดงผลรวมต้นทุน และรวมรายจ่าย (ตรงช่องที่เพิ่ม)
+  // แสดงผลรวมต้นทุน และรวมค่าใช้จ่าย (แต่ละช่อง)
   document.getElementById('totalCostDisplay').textContent = sumCost.toFixed(2);
   document.getElementById('totalExpenseDisplay').textContent = totalExpense.toFixed(2);
+
+  // คำนวณช่อง 'รวมรายจ่ายทั้งหมด' เป็นผลรวมของต้นทุนและค่าใช้จ่าย
+  const totalCombined = sumCost + totalExpense;
+  document.getElementById('totalCombinedDisplay').textContent = totalCombined.toFixed(2);
 
   // กระจายยอดขายรวมไปยังแต่ละสินค้า ตามสัดส่วนต้นทุน (cost)
   if (sumCost > 0 && totalSaleInput > 0) {
