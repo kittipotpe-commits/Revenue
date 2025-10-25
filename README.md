@@ -1,1 +1,266 @@
-<img width="225" height="225" alt="images (2)" src="https://github.com/user-attachments/assets/a0b6968c-0c73-4a36-8a5e-133f2ac03ef3" />
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>รายรับของพนักงาน</title>
+<style>
+  :root{
+    --brand-red:#c8102e;
+    --brand-dark:#8b0f21;
+    --muted:#f4f4f4;
+    --text:#222;
+  }
+  body {
+    font-family: "Prompt", sans-serif;
+    background: white;
+    margin:0;
+    padding:20px;
+    color:var(--text);
+  }
+  .header {
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:14px 18px;
+    border-radius:10px;
+    background: linear-gradient(90deg, var(--brand-red) 0%, var(--brand-red) 100%);
+    color:white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    margin-bottom:14px;
+  }
+  #logo {
+    width:64px;
+    height:64px;
+    object-fit:cover;
+    border-radius:10px;
+    background:white;
+    padding:6px;
+  }
+  h1 {
+    margin:0;
+    font-size:1.3rem;
+    font-weight:600;
+  }
+
+  table { width:100%; border-collapse:collapse; margin-top:6px; background:white; border-radius:10px; overflow:hidden; box-shadow:0 2px 5px rgba(0,0,0,0.06); }
+  th, td { border-bottom:1px solid #eee; padding:10px; text-align:center; font-size:0.95em; }
+  thead th { background:var(--brand-red); color:white; font-weight:600; }
+  .expense-row td { text-align:left; padding:10px 14px; color:var(--text); }
+  input[type="number"] { width:110px; padding:6px; text-align:right; border:1px solid #ddd; border-radius:6px; }
+  .muted-box { background:var(--muted); padding:6px 10px; border-radius:6px; }
+  tfoot td { font-weight:bold; background:#fafafa; }
+  button { margin-top:15px; width:100%; padding:10px; background:var(--brand-red); color:white; border:none; border-radius:8px; font-size:1em; cursor:pointer; }
+  .sales-total { margin-top:12px; display:flex; gap:8px; align-items:center; justify-content:flex-end; }
+  .below-sales { margin-top:10px; display:flex; gap:12px; justify-content:flex-end; align-items:center; font-size:0.95em; color:#222; }
+  .below-sales div { background:#fff; padding:6px 10px; border-radius:6px; border:1px solid #eee; }
+  @media(max-width:600px){
+    thead th, th, td { font-size:0.85em; padding:8px; }
+    input[type="number"]{ width:80px; }
+    .sales-total{ flex-direction:column; align-items:stretch; }
+    .below-sales{ flex-direction:column; align-items:flex-end; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Header with logo + title -->
+<div class="header">
+  <!-- <img width="225" height="225" alt="images (2)" src="https://github.com/user-attachments/assets/0cd2df41-d65a-47a1-8fe3-d7941b001a5d" />
+ -->
+  <img id="logo" src="logo.png" alt="logo">
+  <div>
+    <h1>รายรับของพนักงาน</h1>
+    <div style="font-size:0.9rem; opacity:0.9;">สรุปยอดและหักค่าใช้จ่าย (โทน ขาว-แดง)</div>
+  </div>
+</div>
+
+<h2 style="margin:0 0 8px 0; font-size:1rem;">ค่าใช้จ่ายต่อวัน</h2>
+<table>
+<tr class="expense-row">
+  <td>ค่าขนส่ง (ล็อก)</td>
+  <td><strong><span id="shippingDisplay">250</span> บาท</strong></td>
+</tr>
+<tr class="expense-row">
+  <td>ค่าน้ำแข็งแห้ง (ล็อก)</td>
+  <td><strong><span id="iceDisplay">30</span> บาท</strong></td>
+</tr>
+<tr class="expense-row">
+  <td>ค่าอินเตอร์เน็ต (ล็อก)</td>
+  <td><strong><span id="internetDisplay">6</span> บาท</strong></td>
+</tr>
+<tr class="expense-row">
+  <td>ค่าเช่าล็อก</td>
+  <td><input id="rent" type="number" min="0" value="0" onchange="calculate()"> บาท</td>
+</tr>
+<tr class="expense-row">
+  <td>ค่าไฟ</td>
+  <td><input id="electric" type="number" min="0" value="0" onchange="calculate()"> บาท</td>
+</tr>
+<tr class="expense-row">
+  <td>อื่นๆ</td>
+  <td><input id="other" type="number" min="0" value="0" onchange="calculate()"> บาท</td>
+</tr>
+</table>
+
+<h2 style="margin-top:14px; font-size:1rem;">ยอดขายสินค้า</h2>
+<table>
+  <thead>
+    <tr>
+      <th>สินค้า</th>
+      <th>จำนวนชิ้น</th>
+      <th>กำไรสุทธิ</th>
+      <th>พนักงาน 80%</th>
+      <th>เจ้าของร้าน 20%</th>
+    </tr>
+  </thead>
+  <tbody id="productTable">
+    <tr><td>ชีสเค้ก</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>ไก่หยอง</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>หน้านิ่ม</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>เปี๊ยะ</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>บราวนี่</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>ขนมปังเจ</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+  </tbody>
+  <tfoot>
+    <!-- ย้ายแถว 'รวมทั้งหมด' ให้อยู่ก่อนยอดขายรวม -->
+    <tr>
+      <td>รวมทั้งหมด</td>
+      <td>-</td>
+      <td id="totalProfit">0</td>
+      <td id="totalStaff">0</td>
+      <td id="totalOwner">0</td>
+    </tr>
+
+    <tr>
+      <td colspan="5">
+        <div class="sales-total">
+          <div style="font-weight:600;">ยอดขายรวมทั้งหมด (กรอกยอดขายรวมทุกรายการ):</div>
+          <div><input id="totalSalesInput" type="number" min="0" value="0" onchange="calculate()"></div>
+          <div>บาท</div>
+        </div>
+
+        <!-- แสดงรวมต้นทุน / รวมค่าใช้จ่าย และช่องรวมรายจ่ายทั้งหมด (ผลรวมของ 2 ช่อง) -->
+        <div class="below-sales" style="margin-top:10px;">
+          <div>รวมต้นทุนทั้งหมด: <strong><span id="totalCostDisplay">0.00</span> บาท</strong></div>
+          <div>รวมค่าใช้จ่ายทั้งหมด: <strong><span id="totalExpenseDisplay">0.00</span> บาท</strong></div>
+          <div>รวมรายจ่ายทั้งหมด: <strong><span id="totalCombinedDisplay">0.00</span> บาท</strong></div>
+        </div>
+
+      </td>
+    </tr>
+
+  </tfoot>
+</table>
+
+<button onclick="clearAll()">ล้างรายการสินค้า</button>
+
+<script>
+// ราคาต้นทุนต่อชิ้น (ล็อกไว้)
+const costList = { "ชีสเค้ก":25, "ไก่หยอง":20, "หน้านิ่ม":10, "เปี๊ยะ":25, "บราวนี่":15, "ขนมปังเจ":20 };
+
+// ค่ารายจ่ายล็อกตามที่ร้องขอ
+const SHIPPING = 250;
+const ICE = 30;
+const INTERNET = 6;
+
+// แสดงค่าล็อกบนหน้า
+document.getElementById('shippingDisplay').textContent = SHIPPING;
+document.getElementById('iceDisplay').textContent = ICE;
+document.getElementById('internetDisplay').textContent = INTERNET;
+
+function calculate() {
+  // อ่านยอดขายรวมที่ผู้ใช้กรอก
+  const totalSaleInput = parseFloat(document.getElementById('totalSalesInput').value) || 0;
+
+  // อ่านค่าใช้จ่ายที่ผู้ใช้กรอก
+  const rent = parseFloat(document.getElementById("rent").value) || 0;
+  const electric = parseFloat(document.getElementById("electric").value) || 0;
+  const other = parseFloat(document.getElementById("other").value) || 0;
+
+  const totalExpense = SHIPPING + ICE + INTERNET + rent + electric + other;
+
+  const rows = Array.from(document.querySelectorAll("#productTable tr"));
+
+  // เก็บข้อมูลแถว: qty, cost
+  const rowData = rows.map(row=>{
+    const name = row.cells[0].innerText;
+    const qty = parseFloat(row.querySelector(".qty").value) || 0;
+    const cost = qty * (costList[name] || 0);
+    return { row, name, qty, cost, allocatedSale:0, grossProfit:0, allocatedExpense:0, netProfit:0 };
+  });
+
+  const sumCost = rowData.reduce((s,r)=>s + r.cost, 0);
+
+  // แสดงผลรวมต้นทุน และรวมค่าใช้จ่าย (แต่ละช่อง)
+  document.getElementById('totalCostDisplay').textContent = sumCost.toFixed(2);
+  document.getElementById('totalExpenseDisplay').textContent = totalExpense.toFixed(2);
+
+  // คำนวณช่อง 'รวมรายจ่ายทั้งหมด' เป็นผลรวมของต้นทุนและค่าใช้จ่าย
+  const totalCombined = sumCost + totalExpense;
+  document.getElementById('totalCombinedDisplay').textContent = totalCombined.toFixed(2);
+
+  // กระจายยอดขายรวมไปยังแต่ละสินค้า ตามสัดส่วนต้นทุน (cost)
+  if (sumCost > 0 && totalSaleInput > 0) {
+    rowData.forEach(r=>{
+      r.allocatedSale = totalSaleInput * (r.cost / sumCost);
+      r.grossProfit = r.allocatedSale - r.cost;
+    });
+  } else {
+    // ถ้าไม่มีต้นทุน (sumCost == 0) หรือยอดขายรวมเป็น 0 ให้ allocatedSale = 0 และ grossProfit = -cost
+    rowData.forEach(r=>{
+      r.allocatedSale = 0;
+      r.grossProfit = -r.cost;
+    });
+  }
+
+  const sumGrossProfit = rowData.reduce((s,r)=>s + r.grossProfit, 0);
+
+  // กระจายค่าใช้จ่าย: ถ้า sumGrossProfit > 0 ใช้สัดส่วน grossProfit; ถ้า <=0 ใช้สัดส่วนต้นทุน (cost)
+  if (sumGrossProfit > 0) {
+    rowData.forEach(r=>{
+      r.allocatedExpense = (r.grossProfit / sumGrossProfit) * totalExpense;
+      r.netProfit = r.grossProfit - r.allocatedExpense;
+    });
+  } else {
+    // กระจายตามต้นทุน (ถ้า sumCost == 0 จะได้ allocatedExpense = 0)
+    rowData.forEach(r=>{
+      r.allocatedExpense = sumCost > 0 ? (r.cost / sumCost) * totalExpense : 0;
+      r.netProfit = r.grossProfit - r.allocatedExpense;
+    });
+  }
+
+  // แสดงผลแถวและรวมผลรวม
+  let totalProfit = 0, totalStaff = 0, totalOwner = 0;
+  rowData.forEach(r=>{
+    const staff = r.netProfit * 0.8;
+    const owner = r.netProfit * 0.2;
+
+    r.row.querySelector(".profit").textContent = r.netProfit.toFixed(2);
+    r.row.querySelector(".staff").textContent = staff.toFixed(2);
+    r.row.querySelector(".owner").textContent = owner.toFixed(2);
+
+    totalProfit += r.netProfit;
+    totalStaff += staff;
+    totalOwner += owner;
+  });
+
+  // แสดงผลรวม
+  document.getElementById("totalProfit").textContent = totalProfit.toFixed(2);
+  document.getElementById("totalStaff").textContent = totalStaff.toFixed(2);
+  document.getElementById("totalOwner").textContent = totalOwner.toFixed(2);
+}
+
+function clearAll(){
+  // ล้างเฉพาะรายการสินค้า (จำนวน) และยอดขายรวม แต่คงค่าใช้จ่ายรายวันและค่าอื่น ๆ ไว้
+  document.querySelectorAll("#productTable .qty").forEach(i=>i.value=0);
+  document.getElementById('totalSalesInput').value = 0;
+  calculate();
+}
+
+// คำนวณเมื่อหน้าโหลดครั้งแรก
+window.addEventListener('DOMContentLoaded', calculate);
+</script>
+
+</body>
+</html>
