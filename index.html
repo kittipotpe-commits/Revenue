@@ -21,6 +21,7 @@
   .header {
     display:flex;
     align-items:center;
+    justify-content:space-between;
     gap:14px;
     padding:14px 18px;
     border-radius:10px;
@@ -28,15 +29,32 @@
     color:white;
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     margin-bottom:14px;
-    justify-content:center;
-    text-align:center;
   }
+  .title-wrap { margin-left:0; }
   h1 {
     margin:0;
     font-size:1.3rem;
     font-weight:600;
   }
-  .subhead { font-size:0.9rem; opacity:0.9; margin-top:4px; }
+
+  /* ปรับสไตล์ช่องกรอกมุมขวาบน */
+  .meta-controls {
+    display:flex;
+    gap:10px;
+    align-items:center;
+    font-size:0.95rem;
+  }
+  .meta-controls label { font-size:0.85rem; opacity:0.95; margin-right:6px; }
+  .meta-controls input[type="text"], .meta-controls input[type="number"] {
+    padding:6px 8px;
+    border-radius:6px;
+    border:1px solid rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.08);
+    color: white;
+    width:120px;
+    text-align:left;
+  }
+  .meta-controls input[type="number"] { width:60px; text-align:center; }
 
   table { width:100%; border-collapse:collapse; margin-top:6px; background:white; border-radius:10px; overflow:hidden; box-shadow:0 2px 5px rgba(0,0,0,0.06); }
   th, td { border-bottom:1px solid #eee; padding:10px; text-align:center; font-size:0.95em; }
@@ -49,11 +67,16 @@
   .sales-total { margin-top:12px; display:flex; gap:8px; align-items:center; justify-content:flex-end; }
   .below-sales { margin-top:10px; display:flex; gap:12px; justify-content:flex-end; align-items:center; font-size:0.95em; color:#222; }
   .below-sales div { background:#fff; padding:6px 10px; border-radius:6px; border:1px solid #eee; }
+  @media(max-width:900px){
+    .meta-controls { flex-wrap:wrap; gap:8px; }
+    .meta-controls input[type="text"] { width:140px; }
+  }
   @media(max-width:600px){
     thead th, th, td { font-size:0.85em; padding:8px; }
     input[type="number"]{ width:80px; }
     .sales-total{ flex-direction:column; align-items:stretch; }
     .below-sales{ flex-direction:column; align-items:flex-end; }
+    .meta-controls input[type="text"] { width:110px; }
   }
 </style>
 </head>
@@ -61,32 +84,47 @@
 
 <!-- Header (no image) -->
 <div class="header">
-  <div>
+  <div class="title-wrap">
     <h1>รายรับของพนักงาน</h1>
-    <div class="subhead">สรุปยอดและหักค่าใช้จ่าย </div>
+    <div style="font-size:0.9rem; opacity:0.9;">สรุปยอดและหักค่าใช้จ่าย (โทน ขาว-แดง)</div>
+  </div>
+
+  <!-- ช่องกรอกมุมขวาบน: ชื่อสาขา และ วัน/เดือน/ปี -->
+  <div class="meta-controls" title="กรอกชื่อสาขา และวันที่ (วัน/เดือน/ปี)">
+    <div style="display:flex; align-items:center; gap:6px;">
+      <label for="branchInput">สาขา:</label>
+      <input id="branchInput" type="text" placeholder="ชื่อสาขา" />
+    </div>
+
+    <div style="display:flex; align-items:center; gap:6px;">
+      <label for="dayInput">วัน/เดือน/ปี:</label>
+      <input id="dayInput" type="number" min="1" max="31" placeholder="DD" />
+      <input id="monthInput" type="number" min="1" max="12" placeholder="MM" />
+      <input id="yearInput" type="number" min="1900" max="9999" placeholder="YYYY" />
+    </div>
   </div>
 </div>
 
 <h2 style="margin:0 0 8px 0; font-size:1rem;">ค่าใช้จ่ายต่อวัน</h2>
 <table>
 <tr class="expense-row">
-  <td>ค่าขนส่ง </td>
+  <td>ค่าขนส่ง (ล็อก)</td>
   <td><strong><span id="shippingDisplay">250</span> บาท</strong></td>
 </tr>
 <tr class="expense-row">
-  <td>ค่าน้ำแข็งแห้ง </td>
+  <td>ค่าน้ำแข็งแห้ง (ล็อก)</td>
   <td><strong><span id="iceDisplay">30</span> บาท</strong></td>
 </tr>
 <tr class="expense-row">
-  <td>ค่าอินเตอร์เน็ต </td>
+  <td>ค่าอินเตอร์เน็ต (ล็อก)</td>
   <td><strong><span id="internetDisplay">6</span> บาท</strong></td>
 </tr>
 <tr class="expense-row">
-  <td>ค่าเช่าล็อก(ต่อวัน)</td>
+  <td>ค่าเช่าล็อก</td>
   <td><input id="rent" type="number" min="0" value="0" onchange="calculate()"> บาท</td>
 </tr>
 <tr class="expense-row">
-  <td>ค่าไฟ(ต่อวัน)</td>
+  <td>ค่าไฟ</td>
   <td><input id="electric" type="number" min="0" value="0" onchange="calculate()"> บาท</td>
 </tr>
 <tr class="expense-row">
@@ -100,7 +138,7 @@
   <thead>
     <tr>
       <th>สินค้า</th>
-      <th>จำนวนสินค้าที่ขายได้</th>
+      <th>จำนวนชิ้น</th>
       <th>กำไรสุทธิ</th>
       <th>พนักงาน 80%</th>
       <th>เจ้าของร้าน 20%</th>
@@ -127,7 +165,7 @@
     <tr>
       <td colspan="5">
         <div class="sales-total">
-          <div style="font-weight:600;">ยอดขายรวมทั้งหมด:</div>
+          <div style="font-weight:600;">ยอดขายรวมทั้งหมด (กรอกยอดขายรวมทุกรายการ):</div>
           <div><input id="totalSalesInput" type="number" min="0" value="0" onchange="calculate()"></div>
           <div>บาท</div>
         </div>
@@ -149,7 +187,7 @@
 
 <script>
 // ราคาต้นทุนต่อชิ้น (ล็อกไว้)
-const costList = { "ชีสเค้ก(25)":25, "ไก่หยอง(20)":20, "หน้านิ่ม(10)":10, "เปี๊ยะ(25)":25, "บราวนี่(15)":15, "ขนมปังเจ(20)":20 };
+const costList = { "ชีสเค้ก":25, "ไก่หยอง":20, "หน้านิ่ม":10, "เปี๊ยะ":25, "บราวนี่":15, "ขนมปังเจ":20 };
 
 // ค่ารายจ่ายล็อกตามที่ร้องขอ
 const SHIPPING = 250;
@@ -160,6 +198,32 @@ const INTERNET = 6;
 document.getElementById('shippingDisplay').textContent = SHIPPING;
 document.getElementById('iceDisplay').textContent = ICE;
 document.getElementById('internetDisplay').textContent = INTERNET;
+
+// ตั้งค่าเริ่มต้นให้ช่องวันที่เป็นวันที่ปัจจุบัน (วัน/เดือน/ปี)
+function pad(n){ return n<10 ? '0'+n : n; }
+function setDefaultDateInputs(){
+  const today = new Date();
+  const d = today.getDate();
+  const m = today.getMonth() + 1;
+  const y = today.getFullYear();
+  const dayInput = document.getElementById('dayInput');
+  const monthInput = document.getElementById('monthInput');
+  const yearInput = document.getElementById('yearInput');
+  if(dayInput && monthInput && yearInput){
+    dayInput.value = pad(d);
+    monthInput.value = pad(m);
+    yearInput.value = y;
+  }
+}
+
+// (ไม่บังคับ) คุณอาจต้องการฟังก์ชันเพื่ออ่านวันที่จากช่องเหล่านี้:
+// คืนค่าเป็นสตริง dd/mm/yyyy
+function getFormattedDate(){
+  const day = document.getElementById('dayInput').value || '';
+  const month = document.getElementById('monthInput').value || '';
+  const year = document.getElementById('yearInput').value || '';
+  return `${day}/${month}/${year}`;
+}
 
 function calculate() {
   // อ่านยอดขายรวมที่ผู้ใช้กรอก
@@ -250,8 +314,11 @@ function clearAll(){
   calculate();
 }
 
-// คำนวณเมื่อหน้าโหลดครั้งแรก
-window.addEventListener('DOMContentLoaded', calculate);
+// ตั้งค่า default วันที่ และเรียกคำนวณตอนโหลด
+window.addEventListener('DOMContentLoaded', ()=>{
+  setDefaultDateInputs();
+  calculate();
+});
 </script>
 
 </body>
