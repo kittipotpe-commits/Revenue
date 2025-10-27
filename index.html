@@ -63,6 +63,7 @@
   thead th { background:var(--brand-red); color:white; font-weight:600; }
   .expense-row td { text-align:left; padding:10px 14px; color:var(--text); }
   input[type="number"] { width:110px; padding:6px; text-align:right; border:1px solid #ddd; border-radius:6px; }
+  input.qty, input.freeQty { width:90px; }
   .muted-box { background:var(--muted); padding:6px 10px; border-radius:6px; }
   tfoot td { font-weight:bold; background:#fafafa; }
   button { margin-top:15px; width:100%; padding:10px; background:var(--brand-red); color:white; border:none; border-radius:8px; font-size:1em; cursor:pointer; }
@@ -158,23 +159,67 @@
     <tr>
       <th>สินค้า</th>
       <th>จำนวนชิ้น</th>
+      <th>จำนวนที่แถม</th>
       <th>กำไรสุทธิ</th>
       <th>พนักงาน 80%</th>
       <th>เจ้าของร้าน 20%</th>
     </tr>
   </thead>
   <tbody id="productTable">
-    <tr><td>ชีสเค้ก</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>ไก่หยอง</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>หน้านิ่ม</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>เปี๊ยะ</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>บราวนี่</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>ขนมปังเจ</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr>
+      <td>ชีสเค้ก</td>
+      <td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td>
+      <td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td>
+      <td class="profit muted-box">0</td>
+      <td class="staff muted-box">0</td>
+      <td class="owner muted-box">0</td>
+    </tr>
+    <tr>
+      <td>ไก่หยอง</td>
+      <td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td>
+      <td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td>
+      <td class="profit muted-box">0</td>
+      <td class="staff muted-box">0</td>
+      <td class="owner muted-box">0</td>
+    </tr>
+    <tr>
+      <td>หน้านิ่ม</td>
+      <td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td>
+      <td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td>
+      <td class="profit muted-box">0</td>
+      <td class="staff muted-box">0</td>
+      <td class="owner muted-box">0</td>
+    </tr>
+    <tr>
+      <td>เปี๊ยะ</td>
+      <td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td>
+      <td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td>
+      <td class="profit muted-box">0</td>
+      <td class="staff muted-box">0</td>
+      <td class="owner muted-box">0</td>
+    </tr>
+    <tr>
+      <td>บราวนี่</td>
+      <td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td>
+      <td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td>
+      <td class="profit muted-box">0</td>
+      <td class="staff muted-box">0</td>
+      <td class="owner muted-box">0</td>
+    </tr>
+    <tr>
+      <td>ขนมปังเจ</td>
+      <td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td>
+      <td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td>
+      <td class="profit muted-box">0</td>
+      <td class="staff muted-box">0</td>
+      <td class="owner muted-box">0</td>
+    </tr>
   </tbody>
   <tfoot>
     <!-- ย้ายแถว 'รวมทั้งหมด' ให้อยู่ก่อนยอดขายรวม -->
     <tr>
       <td>รวมทั้งหมด</td>
+      <td>-</td>
       <td>-</td>
       <td id="totalProfit">0</td>
       <td id="totalStaff">0</td>
@@ -182,7 +227,7 @@
     </tr>
 
     <tr>
-      <td colspan="5">
+      <td colspan="6">
         <div class="sales-total">
           <div style="font-weight:600;">ยอดขายรวมทั้งหมด (กรอกยอดขายรวมทุกรายการ):</div>
           <div><input id="totalSalesInput" type="number" min="0" value="0" onchange="calculate()"></div>
@@ -262,12 +307,13 @@ function calculate() {
 
   const rows = Array.from(document.querySelectorAll("#productTable tr"));
 
-  // เก็บข้อมูลแถว: qty, cost
+  // เก็บข้อมูลแถว: qty, freeQty, cost (freeQty นับเป็นต้นทุนแต่ไม่เพิ่มยอดขาย)
   const rowData = rows.map(row=>{
     const name = row.cells[0].innerText;
     const qty = parseFloat(row.querySelector(".qty").value) || 0;
-    const cost = qty * (costList[name] || 0);
-    return { row, name, qty, cost, allocatedSale:0, grossProfit:0, allocatedExpense:0, netProfit:0 };
+    const freeQty = parseFloat(row.querySelector(".freeQty").value) || 0;
+    const cost = (qty + freeQty) * (costList[name] || 0);
+    return { row, name, qty, freeQty, cost, allocatedSale:0, grossProfit:0, allocatedExpense:0, netProfit:0 };
   });
 
   const sumCost = rowData.reduce((s,r)=>s + r.cost, 0);
@@ -332,8 +378,9 @@ function calculate() {
 }
 
 function clearAll(){
-  // ล้างเฉพาะรายการสินค้า (จำนวน) และยอดขายรวม แต่คงค่าใช้จ่ายรายวันและค่าอื่น ๆ ไว้
+  // ล้างเฉพาะรายการสินค้า (จำนวน, จำนวนที่แถม) และยอดขายรวม แต่คงค่าใช้จ่ายรายวันและค่าอื่น ๆ ไว้
   document.querySelectorAll("#productTable .qty").forEach(i=>i.value=0);
+  document.querySelectorAll("#productTable .freeQty").forEach(i=>i.value=0);
   document.getElementById('totalSalesInput').value = 0;
   calculate();
 }
