@@ -17,6 +17,8 @@
     margin:0;
     padding:20px;
     color:var(--text);
+    min-height:100vh;
+    box-sizing:border-box;
   }
   .header {
     display:flex;
@@ -67,6 +69,22 @@
   .sales-total { margin-top:12px; display:flex; gap:8px; align-items:center; justify-content:flex-end; }
   .below-sales { margin-top:10px; display:flex; gap:12px; justify-content:flex-end; align-items:center; font-size:0.95em; color:#222; }
   .below-sales div { background:#fff; padding:6px 10px; border-radius:6px; border:1px solid #eee; }
+
+  /* Footer note (left bottom) */
+  .footer-note {
+    position:fixed;
+    left:20px;
+    bottom:20px;
+    background: rgba(255,255,255,0.95);
+    padding:10px 14px;
+    border-radius:8px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.08);
+    color:var(--text);
+    font-size:0.95em;
+    max-width:40%;
+    line-height:1.3;
+  }
+
   @media(max-width:900px){
     .meta-controls { flex-wrap:wrap; gap:8px; }
     .meta-controls input[type="text"] { width:140px; }
@@ -77,6 +95,7 @@
     .sales-total{ flex-direction:column; align-items:stretch; }
     .below-sales{ flex-direction:column; align-items:flex-end; }
     .meta-controls input[type="text"] { width:110px; }
+    .footer-note{ position:static; margin-top:12px; max-width:100%; box-shadow:none; background:#f9f9f9; }
   }
 </style>
 </head>
@@ -184,6 +203,11 @@
 </table>
 
 <button onclick="clearAll()">ล้างรายการสินค้า</button>
+
+<!-- ข้อความหมายเหตุด้านซ้ายล่าง -->
+<div class="footer-note" aria-hidden="false">
+  '' ยอดต้นทุนคิดจากค่าวัตถุดิบการทำขนม และ ผลิตภัณฑ์บรรจุขนม ทั้งหมดแล้ว ''
+</div>
 
 <script>
 // ราคาต้นทุนต่อชิ้น (ล็อกไว้)
