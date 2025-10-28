@@ -39,7 +39,6 @@
     font-weight:600;
   }
 
-  /* ปรับสไตล์ช่องกรอกมุมขวาบน */
   .meta-controls {
     display:flex;
     gap:10px;
@@ -72,48 +71,30 @@
   .below-sales { margin-top:10px; display:flex; gap:12px; justify-content:flex-end; align-items:center; font-size:0.95em; color:#222; }
   .below-sales div { background:#fff; padding:6px 10px; border-radius:6px; border:1px solid #eee; }
 
-  /* Footer note (left bottom) */
-  .footer-note {
-    position:fixed;
-    left:20px;
-    bottom:20px;
-    background: rgba(255,255,255,0.95);
-    padding:10px 14px;
-    border-radius:8px;
-    box-shadow:0 6px 18px rgba(0,0,0,0.08);
-    color:var(--text);
-    font-size:0.95em;
-    max-width:40%;
-    line-height:1.3;
+  /* ซ่อนคอลัมน์ 4-6 (กำไรสุทธิ / พนักงาน / เจ้าของ) */
+  #productTable td:nth-child(4),
+  #productTable td:nth-child(5),
+  #productTable td:nth-child(6),
+  thead th:nth-child(4),
+  thead th:nth-child(5),
+  thead th:nth-child(6) {
+    display:none;
   }
 
   @media(max-width:900px){
     .meta-controls { flex-wrap:wrap; gap:8px; }
-    .meta-controls input[type="text"] { width:140px; }
-    .meta-controls input[type="date"] { width:140px; }
-  }
-  @media(max-width:600px){
-    thead th, th, td { font-size:0.85em; padding:8px; }
-    input[type="number"]{ width:80px; }
-    .sales-total{ flex-direction:column; align-items:stretch; }
-    .below-sales{ flex-direction:column; align-items:flex-end; }
-    .meta-controls input[type="text"] { width:110px; }
-    .meta-controls input[type="date"] { width:120px; }
-    .footer-note{ position:static; margin-top:12px; max-width:100%; box-shadow:none; background:#f9f9f9; }
   }
 </style>
 </head>
 <body>
 
-<!-- Header (no image) -->
 <div class="header">
   <div class="title-wrap">
     <h1>รายรับของพนักงาน</h1>
-    <div style="font-size:0.9rem; opacity:0.9;">สรุปยอดและหักค่าใช้จ่าย </div>
+    <div style="font-size:0.9rem; opacity:0.9;">สรุปยอดและหักค่าใช้จ่าย</div>
   </div>
 
-  <!-- ช่องกรอกมุมขวาบน: ชื่อสาขา และ วันที่ (ใช้ input type="date" สำหรับมือถือ) -->
-  <div class="meta-controls" title="กรอกชื่อสาขา และวันที่">
+  <div class="meta-controls">
     <div style="display:flex; align-items:center; gap:6px;">
       <label for="branchInput">สาขา:</label>
       <input id="branchInput" type="text" placeholder="ชื่อสาขา" />
@@ -126,35 +107,17 @@
   </div>
 </div>
 
-<h2 style="margin:0 0 8px 0; font-size:1rem;">ค่าใช้จ่ายต่อวัน</h2>
+<h2>ค่าใช้จ่ายต่อวัน</h2>
 <table>
-<tr class="expense-row">
-  <td>ค่าขนส่ง </td>
-  <td><strong><span id="shippingDisplay">250</span> บาท</strong></td>
-</tr>
-<tr class="expense-row">
-  <td>ค่าน้ำแข็งแห้ง </td>
-  <td><strong><span id="iceDisplay">30</span> บาท</strong></td>
-</tr>
-<tr class="expense-row">
-  <td>ค่าอินเตอร์เน็ต </td>
-  <td><strong><span id="internetDisplay">6</span> บาท</strong></td>
-</tr>
-<tr class="expense-row">
-  <td>ค่าเช่าล็อก</td>
-  <td><input id="rent" type="number" min="0" value="0" onchange="calculate()"> บาท</td>
-</tr>
-<tr class="expense-row">
-  <td>ค่าไฟ</td>
-  <td><input id="electric" type="number" min="0" value="0" onchange="calculate()"> บาท</td>
-</tr>
-<tr class="expense-row">
-  <td>อื่นๆ</td>
-  <td><input id="other" type="number" min="0" value="0" onchange="calculate()"> บาท</td>
-</tr>
+<tr class="expense-row"><td>ค่าขนส่ง</td><td><strong><span id="shippingDisplay">250</span> บาท</strong></td></tr>
+<tr class="expense-row"><td>ค่าน้ำแข็งแห้ง</td><td><strong><span id="iceDisplay">30</span> บาท</strong></td></tr>
+<tr class="expense-row"><td>ค่าอินเตอร์เน็ต</td><td><strong><span id="internetDisplay">6</span> บาท</strong></td></tr>
+<tr class="expense-row"><td>ค่าเช่าล็อก</td><td><input id="rent" type="number" min="0" value="0" onchange="calculate()"> บาท</td></tr>
+<tr class="expense-row"><td>ค่าไฟ</td><td><input id="electric" type="number" min="0" value="0" onchange="calculate()"> บาท</td></tr>
+<tr class="expense-row"><td>อื่นๆ</td><td><input id="other" type="number" min="0" value="0" onchange="calculate()"> บาท</td></tr>
 </table>
 
-<h2 style="margin-top:14px; font-size:1rem;">ยอดขายสินค้า</h2>
+<h2>ยอดขายสินค้า</h2>
 <table>
   <thead>
     <tr>
@@ -167,61 +130,16 @@
     </tr>
   </thead>
   <tbody id="productTable">
-    <tr>
-      <td>ชีสเค้ก</td>
-      <td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td>
-      <td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td>
-      <td class="profit muted-box">0</td>
-      <td class="staff muted-box">0</td>
-      <td class="owner muted-box">0</td>
-    </tr>
-    <tr>
-      <td>ไก่หยอง</td>
-      <td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td>
-      <td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td>
-      <td class="profit muted-box">0</td>
-      <td class="staff muted-box">0</td>
-      <td class="owner muted-box">0</td>
-    </tr>
-    <tr>
-      <td>หน้านิ่ม</td>
-      <td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td>
-      <td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td>
-      <td class="profit muted-box">0</td>
-      <td class="staff muted-box">0</td>
-      <td class="owner muted-box">0</td>
-    </tr>
-    <tr>
-      <td>เปี๊ยะ</td>
-      <td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td>
-      <td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td>
-      <td class="profit muted-box">0</td>
-      <td class="staff muted-box">0</td>
-      <td class="owner muted-box">0</td>
-    </tr>
-    <tr>
-      <td>บราวนี่</td>
-      <td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td>
-      <td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td>
-      <td class="profit muted-box">0</td>
-      <td class="staff muted-box">0</td>
-      <td class="owner muted-box">0</td>
-    </tr>
-    <tr>
-      <td>ขนมปังเจ</td>
-      <td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td>
-      <td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td>
-      <td class="profit muted-box">0</td>
-      <td class="staff muted-box">0</td>
-      <td class="owner muted-box">0</td>
-    </tr>
+    <tr><td>ชีสเค้ก</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>ไก่หยอง</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>หน้านิ่ม</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>เปี๊ยะ</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>บราวนี่</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>ขนมปังเจ</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
   </tbody>
   <tfoot>
-    <!-- ย้ายแถว 'รวมทั้งหมด' ให้อยู่ก่อนยอดขายรวม -->
     <tr>
-      <td>รวมทั้งหมด</td>
-      <td>-</td>
-      <td>-</td>
+      <td colspan="3" style="text-align:right;">รวมทั้งหมด</td>
       <td id="totalProfit">0</td>
       <td id="totalStaff">0</td>
       <td id="totalOwner">0</td>
@@ -235,76 +153,42 @@
           <div>บาท</div>
         </div>
 
-        <!-- แสดงรวมต้นทุน / รวมค่าใช้จ่าย และช่องรวมรายจ่ายทั้งหมด (ผลรวมของ 2 ช่อง) -->
-        <div class="below-sales" style="margin-top:10px;">
+        <div class="below-sales">
           <div>รวมต้นทุนทั้งหมด: <strong><span id="totalCostDisplay">0.00</span> บาท</strong></div>
           <div>รวมค่าใช้จ่ายทั้งหมด: <strong><span id="totalExpenseDisplay">0.00</span> บาท</strong></div>
           <div>รวมรายจ่ายทั้งหมด: <strong><span id="totalCombinedDisplay">0.00</span> บาท</strong></div>
         </div>
-
       </td>
     </tr>
-
   </tfoot>
 </table>
 
 <button onclick="clearAll()">ล้างรายการสินค้า</button>
 
-<!-- ข้อความหมายเหตุด้านซ้ายล่าง -->
-<div class="footer-note" aria-hidden="false">
-  **ยอดต้นทุนคิดจากค่าวัตถุดิบการทำขนม และ ผลิตภัณฑ์บรรจุขนม ทั้งหมดแล้ว 
-</div>
+<div class="footer-note">**ยอดต้นทุนคิดจากค่าวัตถุดิบและบรรจุภัณฑ์ทั้งหมดแล้ว</div>
 
 <script>
-// ราคาต้นทุนต่อชิ้น (ล็อกไว้)
 const costList = { "ชีสเค้ก":25, "ไก่หยอง":20, "หน้านิ่ม":10, "เปี๊ยะ":25, "บราวนี่":15, "ขนมปังเจ":20 };
+const SHIPPING = 250, ICE = 30, INTERNET = 6;
 
-// ค่ารายจ่ายล็อกตามที่ร้องขอ
-const SHIPPING = 250;
-const ICE = 30;
-const INTERNET = 6;
-
-// แสดงค่าล็อกบนหน้า
 document.getElementById('shippingDisplay').textContent = SHIPPING;
 document.getElementById('iceDisplay').textContent = ICE;
 document.getElementById('internetDisplay').textContent = INTERNET;
 
-// ตั้งค่าเริ่มต้นให้ช่องวันที่เป็นวันที่ปัจจุบัน (สำหรับ input[type="date"])
 function pad(n){ return n<10 ? '0'+n : n; }
 function setDefaultDateInput(){
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = pad(today.getMonth() + 1);
-  const dd = pad(today.getDate());
-  const dateInput = document.getElementById('dateInput');
-  if(dateInput){
-    dateInput.value = `${yyyy}-${mm}-${dd}`; // format yyyy-mm-dd for input[type=date]
-  }
-}
-
-// คืนค่าวันที่ในรูป dd/mm/yyyy จาก date input (หรือค่าว่าง)
-function getFormattedDate(){
-  const dateVal = document.getElementById('dateInput').value;
-  if(!dateVal) return '';
-  const parts = dateVal.split('-'); // yyyy-mm-dd
-  if(parts.length !== 3) return dateVal;
-  return `${parts[2]}/${parts[1]}/${parts[0]}`;
+  const t = new Date();
+  document.getElementById('dateInput').value = `${t.getFullYear()}-${pad(t.getMonth()+1)}-${pad(t.getDate())}`;
 }
 
 function calculate() {
-  // อ่านยอดขายรวมที่ผู้ใช้กรอก
   const totalSaleInput = parseFloat(document.getElementById('totalSalesInput').value) || 0;
-
-  // อ่านค่าใช้จ่ายที่ผู้ใช้กรอก
   const rent = parseFloat(document.getElementById("rent").value) || 0;
   const electric = parseFloat(document.getElementById("electric").value) || 0;
   const other = parseFloat(document.getElementById("other").value) || 0;
-
   const totalExpense = SHIPPING + ICE + INTERNET + rent + electric + other;
 
   const rows = Array.from(document.querySelectorAll("#productTable tr"));
-
-  // เก็บข้อมูลแถว: qty, freeQty, cost (freeQty นับเป็นต้นทุนแต่ไม่เพิ่มยอดขาย)
   const rowData = rows.map(row=>{
     const name = row.cells[0].innerText;
     const qty = parseFloat(row.querySelector(".qty").value) || 0;
@@ -314,80 +198,55 @@ function calculate() {
   });
 
   const sumCost = rowData.reduce((s,r)=>s + r.cost, 0);
-
-  // แสดงผลรวมต้นทุน และรวมค่าใช้จ่าย (แต่ละช่อง)
   document.getElementById('totalCostDisplay').textContent = sumCost.toFixed(2);
   document.getElementById('totalExpenseDisplay').textContent = totalExpense.toFixed(2);
-
-  // คำนวณช่อง 'รวมรายจ่ายทั้งหมด' เป็นผลรวมของต้นทุนและค่าใช้จ่าย
   const totalCombined = sumCost + totalExpense;
   document.getElementById('totalCombinedDisplay').textContent = totalCombined.toFixed(2);
 
-  // กระจายยอดขายรวมไปยังแต่ละสินค้า ตามสัดส่วนต้นทุน (cost)
   if (sumCost > 0 && totalSaleInput > 0) {
     rowData.forEach(r=>{
       r.allocatedSale = totalSaleInput * (r.cost / sumCost);
       r.grossProfit = r.allocatedSale - r.cost;
     });
   } else {
-    // ถ้าไม่มีต้นทุน (sumCost == 0) หรือยอดขายรวมเป็น 0 ให้ allocatedSale = 0 และ grossProfit = -cost
-    rowData.forEach(r=>{
-      r.allocatedSale = 0;
-      r.grossProfit = -r.cost;
-    });
+    rowData.forEach(r=>{ r.allocatedSale = 0; r.grossProfit = -r.cost; });
   }
 
   const sumGrossProfit = rowData.reduce((s,r)=>s + r.grossProfit, 0);
-
-  // กระจายค่าใช้จ่าย: ถ้า sumGrossProfit > 0 ใช้สัดส่วน grossProfit; ถ้า <=0 ใช้สัดส่วนต้นทุน (cost)
   if (sumGrossProfit > 0) {
     rowData.forEach(r=>{
       r.allocatedExpense = (r.grossProfit / sumGrossProfit) * totalExpense;
       r.netProfit = r.grossProfit - r.allocatedExpense;
     });
   } else {
-    // กระจายตามต้นทุน (ถ้า sumCost == 0 จะได้ allocatedExpense = 0)
     rowData.forEach(r=>{
       r.allocatedExpense = sumCost > 0 ? (r.cost / sumCost) * totalExpense : 0;
       r.netProfit = r.grossProfit - r.allocatedExpense;
     });
   }
 
-  // แสดงผลแถวและรวมผลรวม
   let totalProfit = 0, totalStaff = 0, totalOwner = 0;
   rowData.forEach(r=>{
     const staff = r.netProfit * 0.8;
     const owner = r.netProfit * 0.2;
-
-    r.row.querySelector(".profit").textContent = r.netProfit.toFixed(2);
-    r.row.querySelector(".staff").textContent = staff.toFixed(2);
-    r.row.querySelector(".owner").textContent = owner.toFixed(2);
-
     totalProfit += r.netProfit;
     totalStaff += staff;
     totalOwner += owner;
   });
 
-  // แสดงผลรวม
   document.getElementById("totalProfit").textContent = totalProfit.toFixed(2);
   document.getElementById("totalStaff").textContent = totalStaff.toFixed(2);
   document.getElementById("totalOwner").textContent = totalOwner.toFixed(2);
 }
 
 function clearAll(){
-  // ล้างเฉพาะรายการสินค้า (จำนวน, จำนวนที่แถม) และยอดขายรวม แต่คงค่าใช้จ่ายรายวันและค่าอื่น ๆ ไว้
   document.querySelectorAll("#productTable .qty").forEach(i=>i.value=0);
   document.querySelectorAll("#productTable .freeQty").forEach(i=>i.value=0);
   document.getElementById('totalSalesInput').value = 0;
   calculate();
 }
 
-// ตั้งค่า default วันที่ และเรียกคำนวณตอนโหลด
-window.addEventListener('DOMContentLoaded', ()=>{
-  setDefaultDateInput();
-  calculate();
-});
+window.addEventListener('DOMContentLoaded', ()=>{ setDefaultDateInput(); calculate(); });
 </script>
-
 </body>
 </html>
