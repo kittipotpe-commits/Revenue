@@ -42,24 +42,11 @@
   .expense-row td{text-align:left;padding:10px 14px;color:var(--text);}
   input[type="number"]{width:110px;padding:6px;text-align:right;border:1px solid #ddd;border-radius:6px;}
   .muted-box{background:var(--muted);padding:6px 10px;border-radius:6px;}
-  tfoot td{font-weight:bold;background:#fafafa;}
   button{margin-top:15px;width:100%;padding:10px;background:var(--brand-red);color:white;border:none;border-radius:8px;font-size:1em;cursor:pointer;}
   .sales-total{margin-top:12px;display:flex;gap:8px;align-items:center;justify-content:flex-end;}
-  .below-sales{margin-top:10px;display:flex;gap:12px;justify-content:flex-end;align-items:center;font-size:0.95em;color:#222;}
-  .below-sales div{background:#fff;padding:6px 10px;border-radius:6px;border:1px solid #eee;}
-
-  /* ซ่อนคอลัมน์ต้นทุนและรายละเอียดกำไรต่อสินค้า */
-  #productTable td:nth-child(4),
-  #productTable td:nth-child(5),
-  #productTable td:nth-child(6),
-  #productTable td:nth-child(7),
-  thead th:nth-child(4),
-  thead th:nth-child(5),
-  thead th:nth-child(6),
-  thead th:nth-child(7) {
-    display:none;
-  }
-
+  .summary-section{margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;}
+  .summary-section div{background:#fff;padding:8px 12px;border-radius:6px;border:1px solid #eee;font-size:0.95em;}
+  .summary-section strong{color:var(--brand-red);}
   @media(max-width:900px){.meta-controls{flex-wrap:wrap;gap:8px;}}
 </style>
 </head>
@@ -113,31 +100,22 @@
     <tr><td>บราวนี่</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
     <tr><td>ขนมปังเจ</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
   </tbody>
-  <tfoot>
-    <tr>
-      <td colspan="3" style="text-align:right;">รวมทั้งหมด</td>
-      <td id="totalProfit" colspan="1" style="color:var(--brand-red);">0</td>
-      <td id="totalStaff" style="color:green;">0</td>
-      <td id="totalOwner" style="color:blue;">0</td>
-    </tr>
-
-    <tr>
-      <td colspan="7">
-        <div class="sales-total">
-          <div style="font-weight:600;">ยอดขายรวมทั้งหมด:</div>
-          <div><input id="totalSalesInput" type="number" min="0" value="0" onchange="calculate()"></div>
-          <div>บาท</div>
-        </div>
-
-        <div class="below-sales">
-          <div>รวมต้นทุนทั้งหมด: <strong><span id="totalCostDisplay">0.00</span> บาท</strong></div>
-          <div>รวมค่าใช้จ่ายทั้งหมด: <strong><span id="totalExpenseDisplay">0.00</span> บาท</strong></div>
-          <div>รวมรายจ่ายทั้งหมด: <strong><span id="totalCombinedDisplay">0.00</span> บาท</strong></div>
-        </div>
-      </td>
-    </tr>
-  </tfoot>
 </table>
+
+<div class="sales-total">
+  <div style="font-weight:600;">ยอดขายรวมทั้งหมด:</div>
+  <div><input id="totalSalesInput" type="number" min="0" value="0" onchange="calculate()"></div>
+  <div>บาท</div>
+</div>
+
+<div class="summary-section">
+  <div>รวมต้นทุนทั้งหมด: <strong><span id="totalCostDisplay">0.00</span></strong> บาท</div>
+  <div>รวมค่าใช้จ่ายทั้งหมด: <strong><span id="totalExpenseDisplay">0.00</span></strong> บาท</div>
+  <div>รวมรายจ่ายทั้งหมด: <strong><span id="totalCombinedDisplay">0.00</span></strong> บาท</div>
+  <div>กำไรสุทธิรวม: <strong><span id="totalProfit">0.00</span></strong> บาท</div>
+  <div>พนักงาน 80% รวม: <strong><span id="totalStaff">0.00</span></strong> บาท</div>
+  <div>เจ้าของร้าน 20% รวม: <strong><span id="totalOwner">0.00</span></strong> บาท</div>
+</div>
 
 <button onclick="clearAll()">ล้างรายการสินค้า</button>
 
