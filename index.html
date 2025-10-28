@@ -16,8 +16,6 @@
     margin:0;
     padding:20px;
     color:var(--text);
-    min-height:100vh;
-    box-sizing:border-box;
   }
   .header {
     display:flex;
@@ -28,13 +26,12 @@
     border-radius:10px;
     background:var(--brand-red);
     color:white;
-    box-shadow:0 2px 6px rgba(0,0,0,0.08);
     margin-bottom:14px;
   }
   h1{margin:0;font-size:1.3rem;font-weight:600;}
   .meta-controls{display:flex;gap:10px;align-items:center;font-size:0.95rem;}
-  .meta-controls label{font-size:0.85rem;opacity:0.95;margin-right:6px;}
-  .meta-controls input{padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.6);background:rgba(255,255,255,0.08);color:white;width:140px;text-align:left;}
+  .meta-controls label{font-size:0.85rem;margin-right:6px;}
+  .meta-controls input{padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.6);background:rgba(255,255,255,0.08);color:white;width:140px;}
   .meta-controls input[type="date"]{width:160px;}
   table{width:100%;border-collapse:collapse;margin-top:6px;background:white;border-radius:10px;overflow:hidden;box-shadow:0 2px 5px rgba(0,0,0,0.06);}
   th,td{border-bottom:1px solid #eee;padding:10px;text-align:center;font-size:0.95em;}
@@ -47,7 +44,11 @@
   .summary-section{margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;}
   .summary-section div{background:#fff;padding:8px 12px;border-radius:6px;border:1px solid #eee;font-size:0.95em;}
   .summary-section strong{color:var(--brand-red);}
-  @media(max-width:900px){.meta-controls{flex-wrap:wrap;gap:8px;}}
+  /* 🔻 ซ่อนคอลัมน์ 3 ช่องสุดท้าย */
+  th:nth-child(5), th:nth-child(6), th:nth-child(7),
+  td:nth-child(5), td:nth-child(6), td:nth-child(7){
+    display:none;
+  }
 </style>
 </head>
 <body>
@@ -58,14 +59,8 @@
     <div style="font-size:0.9rem;opacity:0.9;">สรุปยอดและหักค่าใช้จ่าย</div>
   </div>
   <div class="meta-controls">
-    <div style="display:flex;align-items:center;gap:6px;">
-      <label for="branchInput">สาขา:</label>
-      <input id="branchInput" type="text" placeholder="ชื่อสาขา"/>
-    </div>
-    <div style="display:flex;align-items:center;gap:6px;">
-      <label for="dateInput">วันที่:</label>
-      <input id="dateInput" type="date"/>
-    </div>
+    <div><label for="branchInput">สาขา:</label><input id="branchInput" type="text" placeholder="ชื่อสาขา"/></div>
+    <div><label for="dateInput">วันที่:</label><input id="dateInput" type="date"/></div>
   </div>
 </div>
 
@@ -93,17 +88,17 @@
     </tr>
   </thead>
   <tbody id="productTable">
-    <tr><td>ชีสเค้ก</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>ไก่หยอง</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>หน้านิ่ม</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>เปี๊ยะ</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>บราวนี่</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>ขนมปังเจ</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>ชีสเค้ก</td><td><input class="qty" type="number" min="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>ไก่หยอง</td><td><input class="qty" type="number" min="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>หน้านิ่ม</td><td><input class="qty" type="number" min="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>เปี๊ยะ</td><td><input class="qty" type="number" min="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>บราวนี่</td><td><input class="qty" type="number" min="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>ขนมปังเจ</td><td><input class="qty" type="number" min="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
   </tbody>
 </table>
 
 <div class="sales-total">
-  <div style="font-weight:600;">ยอดขายรวมทั้งหมด:</div>
+  <div><b>ยอดขายรวมทั้งหมด:</b></div>
   <div><input id="totalSalesInput" type="number" min="0" value="0" onchange="calculate()"></div>
   <div>บาท</div>
 </div>
@@ -120,18 +115,12 @@
 <button onclick="clearAll()">ล้างรายการสินค้า</button>
 
 <script>
-const costList = { "ชีสเค้ก":25, "ไก่หยอง":20, "หน้านิ่ม":10, "เปี๊ยะ":25, "บราวนี่":15, "ขนมปังเจ":20 };
-const SHIPPING = 250, ICE = 30, INTERNET = 6;
+const costList={"ชีสเค้ก":25,"ไก่หยอง":20,"หน้านิ่ม":10,"เปี๊ยะ":25,"บราวนี่":15,"ขนมปังเจ":20};
+const SHIPPING=250,ICE=30,INTERNET=6;
 
-document.getElementById('shippingDisplay').textContent = SHIPPING;
-document.getElementById('iceDisplay').textContent = ICE;
-document.getElementById('internetDisplay').textContent = INTERNET;
-
-function pad(n){return n<10?'0'+n:n;}
-function setDefaultDateInput(){
-  const t=new Date();
-  document.getElementById('dateInput').value=`${t.getFullYear()}-${pad(t.getMonth()+1)}-${pad(t.getDate())}`;
-}
+document.getElementById('shippingDisplay').textContent=SHIPPING;
+document.getElementById('iceDisplay').textContent=ICE;
+document.getElementById('internetDisplay').textContent=INTERNET;
 
 function calculate(){
   const totalSaleInput=parseFloat(document.getElementById('totalSalesInput').value)||0;
@@ -146,59 +135,31 @@ function calculate(){
     const qty=parseFloat(row.querySelector(".qty").value)||0;
     const freeQty=parseFloat(row.querySelector(".freeQty").value)||0;
     const cost=(qty+freeQty)*(costList[name]||0);
-    return {row,name,qty,freeQty,cost,allocatedSale:0,grossProfit:0,allocatedExpense:0,netProfit:0};
+    return {row,name,qty,freeQty,cost};
   });
 
   const sumCost=rowData.reduce((s,r)=>s+r.cost,0);
   document.getElementById('totalCostDisplay').textContent=sumCost.toFixed(2);
   document.getElementById('totalExpenseDisplay').textContent=totalExpense.toFixed(2);
-  const totalCombined=sumCost+totalExpense;
-  document.getElementById('totalCombinedDisplay').textContent=totalCombined.toFixed(2);
-
-  if(sumCost>0&&totalSaleInput>0){
-    rowData.forEach(r=>{
-      r.allocatedSale=totalSaleInput*(r.cost/sumCost);
-      r.grossProfit=r.allocatedSale-r.cost;
-    });
-  }else{
-    rowData.forEach(r=>{r.allocatedSale=0;r.grossProfit=-r.cost;});
-  }
-
-  const sumGrossProfit=rowData.reduce((s,r)=>s+r.grossProfit,0);
-  if(sumGrossProfit>0){
-    rowData.forEach(r=>{
-      r.allocatedExpense=(r.grossProfit/sumGrossProfit)*totalExpense;
-      r.netProfit=r.grossProfit-r.allocatedExpense;
-    });
-  }else{
-    rowData.forEach(r=>{
-      r.allocatedExpense=sumCost>0?(r.cost/sumCost)*totalExpense:0;
-      r.netProfit=r.grossProfit-r.allocatedExpense;
-    });
-  }
+  document.getElementById('totalCombinedDisplay').textContent=(sumCost+totalExpense).toFixed(2);
 
   let totalProfit=0,totalStaff=0,totalOwner=0;
-  rowData.forEach(r=>{
-    const staff=r.netProfit*0.8;
-    const owner=r.netProfit*0.2;
-    totalProfit+=r.netProfit;
-    totalStaff+=staff;
-    totalOwner+=owner;
-  });
-
+  if(sumCost>0&&totalSaleInput>0){
+    const profitAll=totalSaleInput-(sumCost+totalExpense);
+    totalProfit=profitAll;
+    totalStaff=profitAll*0.8;
+    totalOwner=profitAll*0.2;
+  }
   document.getElementById("totalProfit").textContent=totalProfit.toFixed(2);
   document.getElementById("totalStaff").textContent=totalStaff.toFixed(2);
   document.getElementById("totalOwner").textContent=totalOwner.toFixed(2);
 }
-
 function clearAll(){
-  document.querySelectorAll("#productTable .qty").forEach(i=>i.value=0);
-  document.querySelectorAll("#productTable .freeQty").forEach(i=>i.value=0);
+  document.querySelectorAll("#productTable .qty, #productTable .freeQty").forEach(i=>i.value=0);
   document.getElementById('totalSalesInput').value=0;
   calculate();
 }
-
-window.addEventListener('DOMContentLoaded',()=>{setDefaultDateInput();calculate();});
+window.addEventListener('DOMContentLoaded',calculate);
 </script>
 </body>
 </html>
