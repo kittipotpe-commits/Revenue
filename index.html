@@ -44,6 +44,11 @@
   .summary-section{margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end;}
   .summary-section div{background:#fff;padding:8px 12px;border-radius:6px;border:1px solid #eee;font-size:0.95em;}
   .summary-section strong{color:var(--brand-red);}
+  /* 🔻 ซ่อนคอลัมน์ 3 ช่องสุดท้าย */
+  th:nth-child(5), th:nth-child(6), th:nth-child(7),
+  td:nth-child(5), td:nth-child(6), td:nth-child(7){
+    display:none;
+  }
 </style>
 </head>
 <body>
@@ -76,18 +81,19 @@
       <th>สินค้า</th>
       <th>จำนวนชิ้น</th>
       <th>จำนวนที่แถม</th>
+      <th>ต้นทุนรวม</th>
       <th>กำไรสุทธิ</th>
       <th>พนักงาน 80%</th>
       <th>เจ้าของร้าน 20%</th>
     </tr>
   </thead>
   <tbody id="productTable">
-    <tr><td>ชีสเค้ก</td><td><input class="qty" type="number" min="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>ไก่หยอง</td><td><input class="qty" type="number" min="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>หน้านิ่ม</td><td><input class="qty" type="number" min="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>เปี๊ยะ</td><td><input class="qty" type="number" min="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>บราวนี่</td><td><input class="qty" type="number" min="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>ขนมปังเจ</td><td><input class="qty" type="number" min="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>ชีสเค้ก</td><td><input class="qty" type="number" min="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>ไก่หยอง</td><td><input class="qty" type="number" min="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>หน้านิ่ม</td><td><input class="qty" type="number" min="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>เปี๊ยะ</td><td><input class="qty" type="number" min="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>บราวนี่</td><td><input class="qty" type="number" min="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>ขนมปังเจ</td><td><input class="qty" type="number" min="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
   </tbody>
 </table>
 
@@ -129,7 +135,7 @@ function calculate(){
     const qty=parseFloat(row.querySelector(".qty").value)||0;
     const freeQty=parseFloat(row.querySelector(".freeQty").value)||0;
     const cost=(qty+freeQty)*(costList[name]||0);
-    return {name,qty,freeQty,cost};
+    return {row,name,qty,freeQty,cost};
   });
 
   const sumCost=rowData.reduce((s,r)=>s+r.cost,0);
