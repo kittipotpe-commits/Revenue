@@ -71,16 +71,6 @@
   .below-sales { margin-top:10px; display:flex; gap:12px; justify-content:flex-end; align-items:center; font-size:0.95em; color:#222; }
   .below-sales div { background:#fff; padding:6px 10px; border-radius:6px; border:1px solid #eee; }
 
-  /* ซ่อนคอลัมน์ 4-6 (กำไรสุทธิ / พนักงาน / เจ้าของ) */
-  #productTable td:nth-child(4),
-  #productTable td:nth-child(5),
-  #productTable td:nth-child(6),
-  thead th:nth-child(4),
-  thead th:nth-child(5),
-  thead th:nth-child(6) {
-    display:none;
-  }
-
   @media(max-width:900px){
     .meta-controls { flex-wrap:wrap; gap:8px; }
   }
@@ -124,29 +114,31 @@
       <th>สินค้า</th>
       <th>จำนวนชิ้น</th>
       <th>จำนวนที่แถม</th>
+      <th>ต้นทุนรวม</th>
       <th>กำไรสุทธิ</th>
       <th>พนักงาน 80%</th>
       <th>เจ้าของร้าน 20%</th>
     </tr>
   </thead>
   <tbody id="productTable">
-    <tr><td>ชีสเค้ก</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>ไก่หยอง</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>หน้านิ่ม</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>เปี๊ยะ</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>บราวนี่</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
-    <tr><td>ขนมปังเจ</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>ชีสเค้ก</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>ไก่หยอง</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>หน้านิ่ม</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>เปี๊ยะ</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>บราวนี่</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>ขนมปังเจ</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
   </tbody>
   <tfoot>
     <tr>
       <td colspan="3" style="text-align:right;">รวมทั้งหมด</td>
+      <td id="totalCost">0</td>
       <td id="totalProfit">0</td>
       <td id="totalStaff">0</td>
       <td id="totalOwner">0</td>
     </tr>
 
     <tr>
-      <td colspan="6">
+      <td colspan="7">
         <div class="sales-total">
           <div style="font-weight:600;">ยอดขายรวมทั้งหมด (กรอกยอดขายรวมทุกรายการ):</div>
           <div><input id="totalSalesInput" type="number" min="0" value="0" onchange="calculate()"></div>
@@ -203,6 +195,11 @@ function calculate() {
   const totalCombined = sumCost + totalExpense;
   document.getElementById('totalCombinedDisplay').textContent = totalCombined.toFixed(2);
 
+  // แสดงต้นทุนรวมแต่ละสินค้า
+  rowData.forEach(r=>{
+    r.row.querySelector(".cost").textContent = r.cost.toFixed(2);
+  });
+
   if (sumCost > 0 && totalSaleInput > 0) {
     rowData.forEach(r=>{
       r.allocatedSale = totalSaleInput * (r.cost / sumCost);
@@ -232,8 +229,12 @@ function calculate() {
     totalProfit += r.netProfit;
     totalStaff += staff;
     totalOwner += owner;
+    r.row.querySelector(".profit").textContent = r.netProfit.toFixed(2);
+    r.row.querySelector(".staff").textContent = staff.toFixed(2);
+    r.row.querySelector(".owner").textContent = owner.toFixed(2);
   });
 
+  document.getElementById("totalCost").textContent = sumCost.toFixed(2);
   document.getElementById("totalProfit").textContent = totalProfit.toFixed(2);
   document.getElementById("totalStaff").textContent = totalStaff.toFixed(2);
   document.getElementById("totalOwner").textContent = totalOwner.toFixed(2);
