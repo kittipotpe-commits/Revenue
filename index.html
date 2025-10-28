@@ -1,60 +1,99 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>คำนวณกำไร 80/20</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>รายรับของพนักงาน</title>
 <style>
+  :root{
+    --brand-red:#c8102e;
+    --muted:#f4f4f4;
+    --text:#222;
+  }
   body {
-    font-family: "Prompt", sans-serif;
-    background: #fafafa;
-    padding: 20px;
+    font-family:"Prompt",sans-serif;
+    background:white;
+    margin:0;
+    padding:20px;
+    color:var(--text);
+    min-height:100vh;
+    box-sizing:border-box;
   }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  .header {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    padding:14px 18px;
+    border-radius:10px;
+    background:var(--brand-red);
+    color:white;
+    box-shadow:0 2px 6px rgba(0,0,0,0.08);
+    margin-bottom:14px;
   }
-  th, td {
-    padding: 10px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
+  h1{margin:0;font-size:1.3rem;font-weight:600;}
+  .meta-controls{display:flex;gap:10px;align-items:center;font-size:0.95rem;}
+  .meta-controls label{font-size:0.85rem;opacity:0.95;margin-right:6px;}
+  .meta-controls input{padding:6px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.6);background:rgba(255,255,255,0.08);color:white;width:140px;text-align:left;}
+  .meta-controls input[type="date"]{width:160px;}
+  table{width:100%;border-collapse:collapse;margin-top:6px;background:white;border-radius:10px;overflow:hidden;box-shadow:0 2px 5px rgba(0,0,0,0.06);}
+  th,td{border-bottom:1px solid #eee;padding:10px;text-align:center;font-size:0.95em;}
+  thead th{background:var(--brand-red);color:white;font-weight:600;}
+  .expense-row td{text-align:left;padding:10px 14px;color:var(--text);}
+  input[type="number"]{width:110px;padding:6px;text-align:right;border:1px solid #ddd;border-radius:6px;}
+  .muted-box{background:var(--muted);padding:6px 10px;border-radius:6px;}
+  tfoot td{font-weight:bold;background:#fafafa;}
+  button{margin-top:15px;width:100%;padding:10px;background:var(--brand-red);color:white;border:none;border-radius:8px;font-size:1em;cursor:pointer;}
+  .sales-total{margin-top:12px;display:flex;gap:8px;align-items:center;justify-content:flex-end;}
+  .below-sales{margin-top:10px;display:flex;gap:12px;justify-content:flex-end;align-items:center;font-size:0.95em;color:#222;}
+  .below-sales div{background:#fff;padding:6px 10px;border-radius:6px;border:1px solid #eee;}
+
+  /* ซ่อนคอลัมน์ต้นทุนและรายละเอียดกำไรต่อสินค้า */
+  #productTable td:nth-child(4),
+  #productTable td:nth-child(5),
+  #productTable td:nth-child(6),
+  #productTable td:nth-child(7),
+  thead th:nth-child(4),
+  thead th:nth-child(5),
+  thead th:nth-child(6),
+  thead th:nth-child(7) {
+    display:none;
   }
-  th {
-    background: #f2f2f2;
-  }
-  input {
-    width: 80px;
-    text-align: center;
-  }
-  .muted-box {
-    background: #f8f8f8;
-  }
-  .summary {
-    margin-top: 20px;
-    padding: 15px;
-    background: #fffbe6;
-    border-radius: 10px;
-    border: 1px solid #ffe58f;
-  }
-  .summary div {
-    margin: 8px 0;
-    font-size: 18px;
-  }
-  .highlight {
-    font-weight: bold;
-    color: #d48806;
-  }
+
+  @media(max-width:900px){.meta-controls{flex-wrap:wrap;gap:8px;}}
 </style>
 </head>
 <body>
 
-<h2>📊 คำนวณกำไร 80/20</h2>
+<div class="header">
+  <div>
+    <h1>รายรับของพนักงาน</h1>
+    <div style="font-size:0.9rem;opacity:0.9;">สรุปยอดและหักค่าใช้จ่าย</div>
+  </div>
+  <div class="meta-controls">
+    <div style="display:flex;align-items:center;gap:6px;">
+      <label for="branchInput">สาขา:</label>
+      <input id="branchInput" type="text" placeholder="ชื่อสาขา"/>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <label for="dateInput">วันที่:</label>
+      <input id="dateInput" type="date"/>
+    </div>
+  </div>
+</div>
 
-<table id="productTable">
+<h2>ค่าใช้จ่ายต่อวัน</h2>
+<table>
+<tr class="expense-row"><td>ค่าขนส่ง</td><td><strong><span id="shippingDisplay">250</span> บาท</strong></td></tr>
+<tr class="expense-row"><td>ค่าน้ำแข็งแห้ง</td><td><strong><span id="iceDisplay">30</span> บาท</strong></td></tr>
+<tr class="expense-row"><td>ค่าอินเตอร์เน็ต</td><td><strong><span id="internetDisplay">6</span> บาท</strong></td></tr>
+<tr class="expense-row"><td>ค่าเช่าล็อก</td><td><input id="rent" type="number" min="0" value="0" onchange="calculate()"> บาท</td></tr>
+<tr class="expense-row"><td>ค่าไฟ</td><td><input id="electric" type="number" min="0" value="0" onchange="calculate()"> บาท</td></tr>
+<tr class="expense-row"><td>อื่นๆ</td><td><input id="other" type="number" min="0" value="0" onchange="calculate()"> บาท</td></tr>
+</table>
+
+<h2>ยอดขายสินค้า</h2>
+<table>
   <thead>
     <tr>
       <th>สินค้า</th>
@@ -66,75 +105,122 @@
       <th>เจ้าของร้าน 20%</th>
     </tr>
   </thead>
-  <tbody>
-    <tr>
-      <td>ชีสเค้ก</td>
-      <td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td>
-      <td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td>
-      <td class="cost muted-box">0</td>
-      <td class="profit muted-box">0</td>
-      <td class="staff muted-box">0</td>
-      <td class="owner muted-box">0</td>
-    </tr>
-    <tr>
-      <td>ไก่หยอง</td>
-      <td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td>
-      <td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td>
-      <td class="cost muted-box">0</td>
-      <td class="profit muted-box">0</td>
-      <td class="staff muted-box">0</td>
-      <td class="owner muted-box">0</td>
-    </tr>
-    <tr>
-      <td>หน้านิ่ม</td>
-      <td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td>
-      <td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td>
-      <td class="cost muted-box">0</td>
-      <td class="profit muted-box">0</td>
-      <td class="staff muted-box">0</td>
-      <td class="owner muted-box">0</td>
-    </tr>
+  <tbody id="productTable">
+    <tr><td>ชีสเค้ก</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>ไก่หยอง</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>หน้านิ่ม</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>เปี๊ยะ</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>บราวนี่</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
+    <tr><td>ขนมปังเจ</td><td><input class="qty" type="number" min="0" value="0" onchange="calculate()"></td><td><input class="freeQty" type="number" min="0" value="0" onchange="calculate()"></td><td class="cost muted-box">0</td><td class="profit muted-box">0</td><td class="staff muted-box">0</td><td class="owner muted-box">0</td></tr>
   </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="3" style="text-align:right;">รวมทั้งหมด</td>
+      <td id="totalProfit" colspan="1" style="color:var(--brand-red);">0</td>
+      <td id="totalStaff" style="color:green;">0</td>
+      <td id="totalOwner" style="color:blue;">0</td>
+    </tr>
+
+    <tr>
+      <td colspan="7">
+        <div class="sales-total">
+          <div style="font-weight:600;">ยอดขายรวมทั้งหมด:</div>
+          <div><input id="totalSalesInput" type="number" min="0" value="0" onchange="calculate()"></div>
+          <div>บาท</div>
+        </div>
+
+        <div class="below-sales">
+          <div>รวมต้นทุนทั้งหมด: <strong><span id="totalCostDisplay">0.00</span> บาท</strong></div>
+          <div>รวมค่าใช้จ่ายทั้งหมด: <strong><span id="totalExpenseDisplay">0.00</span> บาท</strong></div>
+          <div>รวมรายจ่ายทั้งหมด: <strong><span id="totalCombinedDisplay">0.00</span> บาท</strong></div>
+        </div>
+      </td>
+    </tr>
+  </tfoot>
 </table>
 
-<div style="margin-top:20px;">
-  <label>ยอดขายรวม (บาท): <input id="totalSales" type="number" value="0" onchange="calculate()"></label><br>
-  <label>ค่าใช้จ่ายรายวัน (บาท): <input id="dailyCost" type="number" value="0" onchange="calculate()"></label>
-</div>
-
-<div class="summary">
-  <div>💰 <span class="highlight">กำไรสุทธิรวม:</span> <span id="totalProfit">0</span> บาท</div>
-  <div>👩‍🍳 <span class="highlight">พนักงาน 80% รวม:</span> <span id="staffTotal">0</span> บาท</div>
-  <div>🏠 <span class="highlight">เจ้าของร้าน 20% รวม:</span> <span id="ownerTotal">0</span> บาท</div>
-</div>
+<button onclick="clearAll()">ล้างรายการสินค้า</button>
 
 <script>
-const costList = [25, 20, 10]; // ต้นทุนสินค้าเรียงตามตาราง
+const costList = { "ชีสเค้ก":25, "ไก่หยอง":20, "หน้านิ่ม":10, "เปี๊ยะ":25, "บราวนี่":15, "ขนมปังเจ":20 };
+const SHIPPING = 250, ICE = 30, INTERNET = 6;
 
-function calculate() {
-  const rows = document.querySelectorAll("#productTable tbody tr");
-  let sumCost = 0;
+document.getElementById('shippingDisplay').textContent = SHIPPING;
+document.getElementById('iceDisplay').textContent = ICE;
+document.getElementById('internetDisplay').textContent = INTERNET;
 
-  rows.forEach((row, i) => {
-    const qty = parseFloat(row.querySelector(".qty").value) || 0;
-    const freeQty = parseFloat(row.querySelector(".freeQty").value) || 0;
-    const cost = (qty + freeQty) * costList[i];
-    row.querySelector(".cost").textContent = cost.toFixed(2);
-    sumCost += cost;
+function pad(n){return n<10?'0'+n:n;}
+function setDefaultDateInput(){
+  const t=new Date();
+  document.getElementById('dateInput').value=`${t.getFullYear()}-${pad(t.getMonth()+1)}-${pad(t.getDate())}`;
+}
+
+function calculate(){
+  const totalSaleInput=parseFloat(document.getElementById('totalSalesInput').value)||0;
+  const rent=parseFloat(document.getElementById("rent").value)||0;
+  const electric=parseFloat(document.getElementById("electric").value)||0;
+  const other=parseFloat(document.getElementById("other").value)||0;
+  const totalExpense=SHIPPING+ICE+INTERNET+rent+electric+other;
+
+  const rows=Array.from(document.querySelectorAll("#productTable tr"));
+  const rowData=rows.map(row=>{
+    const name=row.cells[0].innerText;
+    const qty=parseFloat(row.querySelector(".qty").value)||0;
+    const freeQty=parseFloat(row.querySelector(".freeQty").value)||0;
+    const cost=(qty+freeQty)*(costList[name]||0);
+    return {row,name,qty,freeQty,cost,allocatedSale:0,grossProfit:0,allocatedExpense:0,netProfit:0};
   });
 
-  const totalSales = parseFloat(document.getElementById("totalSales").value) || 0;
-  const dailyCost = parseFloat(document.getElementById("dailyCost").value) || 0;
-  const netProfit = totalSales - sumCost - dailyCost;
+  const sumCost=rowData.reduce((s,r)=>s+r.cost,0);
+  document.getElementById('totalCostDisplay').textContent=sumCost.toFixed(2);
+  document.getElementById('totalExpenseDisplay').textContent=totalExpense.toFixed(2);
+  const totalCombined=sumCost+totalExpense;
+  document.getElementById('totalCombinedDisplay').textContent=totalCombined.toFixed(2);
 
-  const staffProfit = netProfit * 0.8;
-  const ownerProfit = netProfit * 0.2;
+  if(sumCost>0&&totalSaleInput>0){
+    rowData.forEach(r=>{
+      r.allocatedSale=totalSaleInput*(r.cost/sumCost);
+      r.grossProfit=r.allocatedSale-r.cost;
+    });
+  }else{
+    rowData.forEach(r=>{r.allocatedSale=0;r.grossProfit=-r.cost;});
+  }
 
-  document.getElementById("totalProfit").textContent = netProfit.toFixed(2);
-  document.getElementById("staffTotal").textContent = staffProfit.toFixed(2);
-  document.getElementById("ownerTotal").textContent = ownerProfit.toFixed(2);
+  const sumGrossProfit=rowData.reduce((s,r)=>s+r.grossProfit,0);
+  if(sumGrossProfit>0){
+    rowData.forEach(r=>{
+      r.allocatedExpense=(r.grossProfit/sumGrossProfit)*totalExpense;
+      r.netProfit=r.grossProfit-r.allocatedExpense;
+    });
+  }else{
+    rowData.forEach(r=>{
+      r.allocatedExpense=sumCost>0?(r.cost/sumCost)*totalExpense:0;
+      r.netProfit=r.grossProfit-r.allocatedExpense;
+    });
+  }
+
+  let totalProfit=0,totalStaff=0,totalOwner=0;
+  rowData.forEach(r=>{
+    const staff=r.netProfit*0.8;
+    const owner=r.netProfit*0.2;
+    totalProfit+=r.netProfit;
+    totalStaff+=staff;
+    totalOwner+=owner;
+  });
+
+  document.getElementById("totalProfit").textContent=totalProfit.toFixed(2);
+  document.getElementById("totalStaff").textContent=totalStaff.toFixed(2);
+  document.getElementById("totalOwner").textContent=totalOwner.toFixed(2);
 }
-</script>
 
+function clearAll(){
+  document.querySelectorAll("#productTable .qty").forEach(i=>i.value=0);
+  document.querySelectorAll("#productTable .freeQty").forEach(i=>i.value=0);
+  document.getElementById('totalSalesInput').value=0;
+  calculate();
+}
+
+window.addEventListener('DOMContentLoaded',()=>{setDefaultDateInput();calculate();});
+</script>
 </body>
 </html>
